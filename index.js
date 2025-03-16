@@ -23,7 +23,7 @@ const Anime = mongoose.model('Anime', animeSchema);
 
 // Base URL for scraping and categories to target
 const BASE_URL = 'https://hianime.to';
-const CATEGORIES = ['/home', '/tv', '/movie'];
+const CATEGORIES = ['/tv', '/movie', '/home'];
 
 // Function to scrape a page from a given category
 async function scrapePage(category, page) {
