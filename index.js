@@ -9,7 +9,7 @@ mongoose.connect('mongodb+srv://eren:Narutoop9@cluster0.yuxdo.mongodb.net/RyuuAp
 .then(() => console.log('✅ Connected to MongoDB'))
 .catch(err => console.error('❌ MongoDB Error:', err));
 
-// Define Anime and Episodes Schema
+// Define Anime Schema
 const animeSchema = new mongoose.Schema({
   title: String,
   url: String,
@@ -19,13 +19,18 @@ const animeSchema = new mongoose.Schema({
 });
 const Anime = mongoose.model('Anime', animeSchema);
 
+// Define Episodes Schema with Array
 const episodeSchema = new mongoose.Schema({
   anime_id: String,
-  episode_no: Number,
-  id: String,
-  title: String,
-  japanese_title: String,
-  filler: Boolean
+  episodes: [
+    {
+      episode_no: Number,
+      id: String,
+      title: String,
+      japanese_title: String,
+      filler: Boolean
+    }
+  ]
 });
 const Episode = mongoose.model('Episode', episodeSchema);
 
@@ -40,16 +45,22 @@ async function fetchAndSaveEpisodes() {
       try {
         const { data } = await axios.get(apiUrl);
         if (data.success && data.results.episodes.length > 0) {
-          await Episode.deleteMany({ anime_id: animeId }); // Remove old episodes
-          const episodesToInsert = data.results.episodes.map(ep => ({
+          // Remove old episodes for this anime
+          await Episode.deleteMany({ anime_id: animeId });
+
+          // Insert new episodes as an array
+          const newEpisodeEntry = new Episode({
             anime_id: animeId,
-            episode_no: ep.episode_no,
-            id: ep.id,
-            title: ep.title,
-            japanese_title: ep.japanese_title,
-            filler: ep.filler
-          }));
-          await Episode.insertMany(episodesToInsert);
+            episodes: data.results.episodes.map(ep => ({
+              episode_no: ep.episode_no,
+              id: ep.id,
+              title: ep.title,
+              japanese_title: ep.japanese_title,
+              filler: ep.filler
+            }))
+          });
+
+          await newEpisodeEntry.save();
           console.log(`✅ Episodes saved for: ${animeId}`);
         }
       } catch (error) {
