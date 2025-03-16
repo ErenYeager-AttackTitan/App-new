@@ -1,0 +1,16 @@
+{
+  "name": "hianime-scraper",
+  "version": "1.0.0",
+  "description": "A web scraper to fetch anime links from Hianime.to and save them to MongoDB.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.1",
+    "cheerio": "^1.0.0-rc.12",
+    "mongoose": "^7.6.3"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
