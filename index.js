@@ -1,6 +1,8 @@
 const axios = require('axios');
 const mongoose = require('mongoose');
 
+const app = express();
+
 // MongoDB Connection
 mongoose.connect('mongodb+srv://eren:Narutoop9@cluster0.yuxdo.mongodb.net/RyuuApp?retryWrites=true&w=majority', {
   useNewUrlParser: true,
